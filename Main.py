@@ -2,14 +2,18 @@ from selenium import webdriver
 import Data
 import Method
 
-driver = webdriver.Chrome()
 
 selector = 'div.issue-page__details > section'
+driver = webdriver.Chrome()
 
-# Сравниваем ссылки на страницах для каждой пары новой и старой страницы
+# Обрабатываем каждую пару старого и нового URL-адресов
 for pair in Data.data:
     old_url, new_url = pair.values()
-    Method.compare_pages(driver, old_url, new_url, selector)
 
-# Закрываем браузер после завершения работы
+    # Открываем старую страницу, собираем данные
+    old_data = Method.extract_data_from_page(driver, old_url, selector)
+    new_data = Method.extract_data_from_page(driver, new_url, selector)
+    print(f"\nСравниваем {old_url} и {new_url}")
+    Method.compare_data(old_data, new_data)
+
 driver.quit()
